@@ -2,34 +2,26 @@
 [![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.streams.nonseekable/publish-package.yml?style=for-the-badge)](https://github.com/soenneker/soenneker.streams.nonseekable/actions/workflows/publish-package.yml)
 [![](https://img.shields.io/nuget/dt/soenneker.streams.nonseekable.svg?style=for-the-badge)](https://www.nuget.org/packages/soenneker.streams.nonseekable/)
 
-# ![](https://user-images.githubusercontent.com/4441470/224455560-91ed3ee7-f510-4041-a8d2-3fc093025112.png) Soenneker.Streams.NonSeekable
+# Soenneker.Streams.NonSeekable
 
-### A lightweight .NET wrapper that exposes a stream as read-only and non-seekable.
+A lightweight wrapper that exposes a stream as read-only and non-seekable.
 
-## Installation
+## Install
 
 ```bash
 dotnet add package Soenneker.Streams.NonSeekable
 ```
 
-## Usage
+## What you get
 
-Wrap any readable stream when a consumer must not seek, inspect its length or position, or write to it:
+- `NonSeekableStream` — A lightweight wrapper that exposes a stream as read-only and non-seekable.
 
-```csharp
-using Soenneker.Streams.NonSeekable;
+## API at a glance
 
-await using var source = File.OpenRead("input.dat");
-await using var stream = new NonSeekableStream(source);
+| API | What it does | Result / important behavior |
+| --- | --- | --- |
+| `new NonSeekableStream(inner, leaveOpen)` | Initializes a new instance of the `NonSeekableStream` class. | Initializes a new instance of the `NonSeekableStream` class. |
 
-byte[] buffer = new byte[4096];
-int bytesRead = await stream.ReadAsync(buffer);
-```
+## Important behavior
 
-The wrapper owns the underlying stream by default. Pass `leaveOpen: true` to keep it open after the wrapper is disposed:
-
-```csharp
-using var stream = new NonSeekableStream(source, leaveOpen: true);
-```
-
-`CanSeek` and `CanWrite` always return `false`. `Length`, `Position`, seeking, and all write operations throw `NotSupportedException`.
+- `new NonSeekableStream(inner, leaveOpen)`: `inner` is `null`.
