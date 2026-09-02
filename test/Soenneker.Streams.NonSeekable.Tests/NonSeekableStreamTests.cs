@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Soenneker.Tests.Unit;
 
@@ -32,13 +33,13 @@ public sealed class NonSeekableStreamTests : UnitTest
     }
 
     [Test]
-    public async Task ReadAsync_should_forward_to_inner_stream()
+    public async Task ReadAsync_should_forward_to_inner_stream(CancellationToken cancellationToken)
     {
         byte[] content = Encoding.UTF8.GetBytes("asynchronous");
         await using var stream = new NonSeekableStream(new MemoryStream(content));
         var buffer = new byte[content.Length];
 
-        int read = await stream.ReadAsync(buffer.AsMemory());
+        int read = await stream.ReadAsync(buffer.AsMemory(), cancellationToken: cancellationToken);
 
         await Assert.That(read).IsEqualTo(content.Length);
         await Assert.That(buffer).IsEquivalentTo(content);
