@@ -10,7 +10,7 @@ namespace Soenneker.Streams.NonSeekable.Tests;
 public sealed class NonSeekableStreamTests : UnitTest
 {
     [Test]
-    public async ValueTask Capabilities_should_be_read_only_and_non_seekable()
+    public async ValueTask Capabilities_should_be_read_only_and_non_seekable(CancellationToken cancellationToken)
     {
         await using var stream = new NonSeekableStream(new MemoryStream());
 
@@ -20,7 +20,7 @@ public sealed class NonSeekableStreamTests : UnitTest
     }
 
     [Test]
-    public async ValueTask Read_should_forward_to_inner_stream()
+    public async ValueTask Read_should_forward_to_inner_stream(CancellationToken cancellationToken)
     {
         byte[] content = Encoding.UTF8.GetBytes("forward-only");
         await using var stream = new NonSeekableStream(new MemoryStream(content));
@@ -46,7 +46,7 @@ public sealed class NonSeekableStreamTests : UnitTest
     }
 
     [Test]
-    public async ValueTask Unsupported_operations_should_throw()
+    public async ValueTask Unsupported_operations_should_throw(CancellationToken cancellationToken)
     {
         await using var stream = new NonSeekableStream(new MemoryStream());
 
@@ -59,7 +59,7 @@ public sealed class NonSeekableStreamTests : UnitTest
     }
 
     [Test]
-    public async ValueTask Dispose_should_dispose_inner_stream_by_default()
+    public async ValueTask Dispose_should_dispose_inner_stream_by_default(CancellationToken cancellationToken)
     {
         var inner = new TrackingMemoryStream();
         var stream = new NonSeekableStream(inner);
@@ -71,7 +71,7 @@ public sealed class NonSeekableStreamTests : UnitTest
     }
 
     [Test]
-    public async ValueTask LeaveOpen_should_preserve_inner_stream()
+    public async ValueTask LeaveOpen_should_preserve_inner_stream(CancellationToken cancellationToken)
     {
         var inner = new TrackingMemoryStream();
         await using (var stream = new NonSeekableStream(inner, leaveOpen: true))
@@ -85,7 +85,7 @@ public sealed class NonSeekableStreamTests : UnitTest
     }
 
     [Test]
-    public async ValueTask Disposed_wrapper_should_not_read_when_inner_is_left_open()
+    public async ValueTask Disposed_wrapper_should_not_read_when_inner_is_left_open(CancellationToken cancellationToken)
     {
         var inner = new MemoryStream([1]);
         var stream = new NonSeekableStream(inner, leaveOpen: true);
@@ -98,7 +98,7 @@ public sealed class NonSeekableStreamTests : UnitTest
     }
 
     [Test]
-    public async ValueTask Null_inner_stream_should_throw()
+    public async ValueTask Null_inner_stream_should_throw(CancellationToken cancellationToken)
     {
         await Assert.That(() => new NonSeekableStream(null!)).Throws<ArgumentNullException>();
     }
